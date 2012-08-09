@@ -6,8 +6,7 @@ public class MetadataTransformationMain {
 
 	public static void main(String [] args) {
 		
-		
-		String datasetId = "cmip5.output1.CMCC.CMCC-CM.decadal2005.mon.atmos.Amon.r1i1p1.v20120604%7Cadm07.cmcc.it";
+		String datasetId = "cloud-cryo.amip.CAM5.v1%7Cpcmdi9.llnl.gov";
 		SolrRecordReader solrRecordReader = new SolrRecordReader(datasetId);
 		
 		Dataset dataset = solrRecordReader.assembleDataset();

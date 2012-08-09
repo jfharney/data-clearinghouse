@@ -1,9 +1,14 @@
+import java.util.ArrayList;
+import java.util.List;
+
 import org.esgf.dc.Dataset;
 import org.esgf.dc.Metadata;
 import org.esgf.dc.Model;
 import org.esgf.dc.dataqual.Dataqual;
 import org.esgf.dc.distinfo.Distinfo;
 import org.esgf.dc.eainfo.Eainfo;
+import org.esgf.dc.idinfo.Citation;
+import org.esgf.dc.idinfo.CiteInfo;
 import org.esgf.dc.idinfo.IDInfo;
 import org.esgf.dc.metainfo.Metainfo;
 import org.esgf.dc.spdoinfo.Spdoinfo;
@@ -13,7 +18,16 @@ import org.esgf.dc.spref.Spref;
 public class FGDCRecordWriter {
 	
 	public static void main(String [] args) {
+		String datasetId = "cloud-cryo.amip.CAM5.v1%7Cpcmdi9.llnl.gov";
+		SolrRecordReader solrRecordReader = new SolrRecordReader(datasetId);
+		
+		Dataset dataset = solrRecordReader.assembleDataset();
+		
+		System.out.println(dataset.getId());
+		
 		FGDCRecordWriter fgdc = new FGDCRecordWriter();
+		
+		fgdc.setDataset(dataset);
 		
 		fgdc.writeFGDC();
 	}
@@ -122,7 +136,35 @@ public class FGDCRecordWriter {
 		IDInfo idinfo = new IDInfo();
 		
 		//write the citation tag here
+		Citation citation = new Citation();
 		
+		CiteInfo citeinfo = new CiteInfo();
+		
+		//set the origins here
+		List<String> origins = new ArrayList<String>();
+		origins.add("**the name of an organization or individual that developed the data set. this is a multi field");
+		origins.add("pcmdi9.llnl.gov");
+		citeinfo.setOrigin(origins);
+		
+		//set the pubdate here
+		String pubdate = "20120716";
+		citeinfo.setPubdate(pubdate);
+		
+		//set the title here
+	    String title = this.dataset.getMetadata().get("title");
+	    citeinfo.setTitle(title);
+	    
+	    //set the onlinks here
+		List<String> onlink = new ArrayList<String>();
+		onlink.add("http://pcmdi9.llnl.gov/esgf-web-fe/live?id=" + this.dataset.getMetadata().get("id"));
+		onlink.add("pcmdi9.llnl.gov");
+	    citeinfo.setOnlink(onlink);
+	    
+	    
+		
+		citation.setCiteInfo(citeinfo);
+		
+		idinfo.setCitation(citation);
 		
 		//write the descript tag here
 		
