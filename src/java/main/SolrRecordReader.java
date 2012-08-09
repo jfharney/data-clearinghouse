@@ -30,10 +30,11 @@ public class SolrRecordReader {
 	
 	private String datasetId;
 	
-	private static String searchAPIURL = "http://pcmdi9.llnl.gov/esg-search/search?query=*&limit=1&";
+	
+	public static String host = "http://esg-datanode.jpl.nasa.gov";
+	
+	private static String searchAPIURL = host + "/esg-search/search?query=*&limit=1&";
 
-	
-	
 	
 	public SolrRecordReader() {
 		this.setDatasetName("");

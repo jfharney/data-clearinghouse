@@ -7,9 +7,18 @@ import org.esgf.dc.Model;
 import org.esgf.dc.dataqual.Dataqual;
 import org.esgf.dc.distinfo.Distinfo;
 import org.esgf.dc.eainfo.Eainfo;
+import org.esgf.dc.idinfo.Bounding;
 import org.esgf.dc.idinfo.Citation;
 import org.esgf.dc.idinfo.CiteInfo;
+import org.esgf.dc.idinfo.Descript;
 import org.esgf.dc.idinfo.IDInfo;
+import org.esgf.dc.idinfo.Keywords;
+import org.esgf.dc.idinfo.RngDates;
+import org.esgf.dc.idinfo.SpDom;
+import org.esgf.dc.idinfo.Status;
+import org.esgf.dc.idinfo.Theme;
+import org.esgf.dc.idinfo.TimeInfo;
+import org.esgf.dc.idinfo.TimePerd;
 import org.esgf.dc.metainfo.Metainfo;
 import org.esgf.dc.spdoinfo.Spdoinfo;
 import org.esgf.dc.spref.Spref;
@@ -160,25 +169,183 @@ public class FGDCRecordWriter {
 		onlink.add("pcmdi9.llnl.gov");
 	    citeinfo.setOnlink(onlink);
 	    
-	    
-		
 		citation.setCiteInfo(citeinfo);
 		
 		idinfo.setCitation(citation);
 		
 		//write the descript tag here
+		Descript descript = new Descript();
+		String abstractD = this.dataset.getMetadata().get("description");
+		if(abstractD == null) {
+			abstractD = "N/A";
+		}
 		
+		descript.setAbstractD(abstractD);
+		
+		idinfo.setDescript(descript);
 		
 		//write the timeperd tag here
+		TimePerd timeperd = new TimePerd();
+		timeperd.setCurrent("publicationdate");
+		TimeInfo timeinfo = new TimeInfo();
+
+		String datetime_start = this.dataset.getMetadata().get("datetime_start");
+		if(datetime_start == null) {
+			datetime_start = "N/A";
+		}
 		
+		String datetime_stop = this.dataset.getMetadata().get("datetime_stop");
+		if(datetime_stop == null) {
+			datetime_stop = "N/A";
+		}
+		
+		RngDates rngdates = new RngDates();
+		
+		rngdates.setBegDate(datetime_start);
+		rngdates.setEndDate(datetime_stop);
+		timeinfo.setRngDates(rngdates);
+		timeperd.setTimeinfo(timeinfo);
+		
+		idinfo.setTimeperd(timeperd);
 		
 		//write the status tag here
+		Status status = new Status();
+		status.setProgress("Complete");
+		status.setUpdate("As appropriate");
+		
+		idinfo.setStatus(status);
 		
 		
 		//write the spdom tag here
+		SpDom spdom = new SpDom();
+		Bounding bounding = new Bounding();
+		
+		String west_degrees = this.dataset.getMetadata().get("west_degrees");
+		String east_degrees = this.dataset.getMetadata().get("east_degrees");
+		String north_degrees = this.dataset.getMetadata().get("north_degrees");
+		String south_degrees = this.dataset.getMetadata().get("south_degrees");
+
+		
+		if(west_degrees == null &&
+		   east_degrees == null && 
+		   north_degrees == null &&
+		   south_degrees == null) {
+			west_degrees = "-180";
+			east_degrees = "180";
+			north_degrees = "90";
+			south_degrees = "-90";
+		}
+		
+		bounding.setWestbc(west_degrees);
+		bounding.setEastbc(east_degrees);
+		bounding.setNorthbc(north_degrees);
+		bounding.setSouthbc(south_degrees);
+		spdom.setBounding(bounding);
+		
+		idinfo.setSpdom(spdom);
 		
 		
 		//write the keywords tag here
+		Keywords keywords = new Keywords();
+		
+		
+		for(String key : this.dataset.getMetadata().keySet()) {
+			
+
+			Theme theme = new Theme();
+			
+			//System.out.println("Key: " + key + " value: " + this.dataset.getMetadata().get(key));
+			if(key.equalsIgnoreCase("experiment")) {
+				System.out.println("processing... " + key);
+				
+			} else if(key.equalsIgnoreCase("experiment_family")) {
+			
+				String themekt = key;
+				
+				List<String> themekeys = new ArrayList<String>();
+				String [] values = this.dataset.getMetadata().get(key).split(";");
+				for(int i=0;i<values.length;i++) {
+					themekeys.add(values[i]);
+				}
+				
+				theme.setThemekt(themekt);
+				theme.setThemekey(themekeys);
+				keywords.addTheme(theme);
+				
+			} else if(key.equalsIgnoreCase("project")) {
+				String themekt = key;
+				
+				List<String> themekeys = new ArrayList<String>();
+				String [] values = this.dataset.getMetadata().get(key).split(";");
+				for(int i=0;i<values.length;i++) {
+					themekeys.add(values[i]);
+				}
+				
+				theme.setThemekt(themekt);
+				theme.setThemekey(themekeys);
+
+				keywords.addTheme(theme);
+			} else if(key.equalsIgnoreCase("dataset_title")) {
+				String themekt = key;
+				
+				List<String> themekeys = new ArrayList<String>();
+				String [] values = this.dataset.getMetadata().get(key).split(";");
+				for(int i=0;i<values.length;i++) {
+					themekeys.add(values[i]);
+				}
+				
+				theme.setThemekt(themekt);
+				theme.setThemekey(themekeys);
+
+				keywords.addTheme(theme);
+			} else if(key.equalsIgnoreCase("cf_standard_name")) {
+			
+				String themekt = key;
+				
+				List<String> themekeys = new ArrayList<String>();
+				String [] values = this.dataset.getMetadata().get(key).split(";");
+				for(int i=0;i<values.length;i++) {
+					themekeys.add(values[i]);
+				}
+				
+				theme.setThemekt(themekt);
+				theme.setThemekey(themekeys);
+
+				keywords.addTheme(theme);
+				
+			} else if(key.equalsIgnoreCase("variable")) {
+				String themekt = key;
+				
+				List<String> themekeys = new ArrayList<String>();
+				String [] values = this.dataset.getMetadata().get(key).split(";");
+				for(int i=0;i<values.length;i++) {
+					themekeys.add(values[i]);
+				}
+				
+				theme.setThemekt(themekt);
+				theme.setThemekey(themekeys);
+
+				keywords.addTheme(theme);
+			} else if(key.equalsIgnoreCase("variable_long_name")) {
+				String themekt = key;
+				
+				List<String> themekeys = new ArrayList<String>();
+				String [] values = this.dataset.getMetadata().get(key).split(";");
+				for(int i=0;i<values.length;i++) {
+					themekeys.add(values[i]);
+				}
+				
+				theme.setThemekt(themekt);
+				theme.setThemekey(themekeys);
+
+				keywords.addTheme(theme);
+			}
+
+		}
+		//theme.setThemekt(themekt);
+		
+		
+		idinfo.setKeywords(keywords);
 		
 		
 		//write the taxonomy tag here
