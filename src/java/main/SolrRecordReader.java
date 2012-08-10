@@ -33,7 +33,7 @@ public class SolrRecordReader {
 	
 	public static String host = "http://esg-datanode.jpl.nasa.gov";
 	
-	private static String searchAPIURL = host + "/esg-search/search?query=*&limit=1&";
+	private static String searchAPIURL;// = host + "/esg-search/search?query=*&limit=1&";
 
 	
 	public SolrRecordReader() {
@@ -52,7 +52,7 @@ public class SolrRecordReader {
         // create an http client
         HttpClient client = new HttpClient();
         
-        searchAPIURL += "id=" + this.datasetId;
+        searchAPIURL = host + "/esg-search/search?query=*&limit=1&" + "id=" + this.datasetId;
         
         System.out.println("searchapi url: " + searchAPIURL);
         
