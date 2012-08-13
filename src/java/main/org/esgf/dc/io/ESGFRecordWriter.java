@@ -1,3 +1,4 @@
+package org.esgf.dc.io;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,6 +43,24 @@ public class ESGFRecordWriter {
 		this.metadata = new Metadata();
 		this.model = model;
 	}
+	
+
+	public Model getModel() {
+		return model;
+	}
+
+	public void setModel(Model model) {
+		this.model = model;
+	}
+
+	public Metadata getMetadata() {
+		return metadata;
+	}
+
+	public void setMetadata(Metadata metadata) {
+		this.metadata = metadata;
+	}
+
 	
 	
 	public void writeRecord() {

@@ -1,3 +1,4 @@
+package org.esgf.dc.io;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
@@ -31,7 +32,7 @@ public class ESGFRecordReader {
 	
 	private String modelName;
 	
-	private static String searchAPIURL = "http://pcmdi9.llnl.gov/esg-search/search?query=*&limit=2&";//model=BNU-ESM&limit=30";
+	private static String searchAPIURL = "http://esg-datanode.jpl.nasa.gov/esg-search/search?query=*&limit=2&";//model=BNU-ESM&limit=30";
 	
 
 	

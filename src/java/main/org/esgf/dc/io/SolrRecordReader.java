@@ -1,3 +1,4 @@
+package org.esgf.dc.io;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
