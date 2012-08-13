@@ -2,13 +2,13 @@
   Author: John Harney
 
   Description:
-  This is the ant build file for the esg-srm project
+  This is the ant build file for the data clearinghouse roject
 
 
 -->
 
 <project name="data-clearinghouse" default="make" basedir="." xmlns:ivy="antlib:org.apache.ivy.ant">
-  <property name="module" value="esg-srm" />
+  <property name="module" value="data-clearinghouse" />
   <property name="organization" value="Earth Systems Grid Federation" />
 
 <!--
