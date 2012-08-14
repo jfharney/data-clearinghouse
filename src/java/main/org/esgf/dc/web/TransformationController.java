@@ -29,34 +29,14 @@ public class TransformationController {
 
 	
 	@RequestMapping(method=RequestMethod.GET, value="/metadata")
-    public @ResponseBody String getSRMRequest(HttpServletRequest request) throws Exception {
-		System.out.println("In getSRMRequest");
+    public @ResponseBody String getMetadataRequest(HttpServletRequest request) throws Exception {
+		System.out.println("In getMetadataRequest");
 		System.out.println("TIME: "+System.currentTimeMillis());
 		
+		String response = null;
 		
-		/*
-		String modelName = "CAM5";
-		ESGFRecordReader esgfRecordReader = new ESGFRecordReader(modelName);
+		String datasetId = request.getParameter("id");
 		
-		Model model = esgfRecordReader.assembleModel();
-		
-		ESGFRecordWriter recordWriter = new ESGFRecordWriter(model);
-		
-		recordWriter.writeRecord();
-		
-		Metadata metadata = recordWriter.getMetadata();
-		
-		//String response = "<srm_url>srm</srm_url>";
-		String response = metadata.toXML();
-		*/
-		
-		/*
-		 * cmip5.output1.INM.inmcm4.1pctCO2.day.atmos.day.r1i1p1.v20110323|pcmdi9.llnl.gov
-		 * cmip5.output1.NCAR.CCSM4.1pctCO2.day.atmos.cfDay.r2i1p1.v20120717|tds.ucar.edu
-		 * cmip5.output1.CSIRO-BOM.ACCESS1-3.1pctCO2.mon.aerosol.aero.r1i1p1.v20120508|esgnode1.nci.org.au
-		 * cmip5.output1.NASA-GMAO.GEOS-5.decadal1960.mon.atmos.Amon.r2i1p1.v20120515|esgdata1.nccs.nasa.gov
-		 * cmip5.output1.NCC.NorESM1-ME.1pctCO2.mon.atmos.Amon.r1i1p1.v20120402|norstore-trd-bio1.hpc.ntnu.no
-		 */
 		
 		List<String> datasetIds = new ArrayList<String>();
 		datasetIds.add("cmip5.output1.NCAR.CCSM4.1pctCO2.day.atmos.cfDay.r2i1p1.v20120717%7Ctds.ucar.edu");
@@ -66,30 +46,56 @@ public class TransformationController {
 		datasetIds.add("cmip5.output1.NCC.NorESM1-ME.1pctCO2.mon.atmos.Amon.r1i1p1.v20120402%7Cnorstore-trd-bio1.hpc.ntnu.no");
 		
 		
-		//for(int i=0;i<datasetIds.size();i++) {
+		if(datasetId == null) {
+			datasetId  = datasetIds.get(0);
+		} 
+		
+		
+		
+		
+		String metadataType = request.getParameter("type");
+		if(metadataType == null) {
+			metadataType = "FGDC";
+		}
+		
+		if(metadataType.equals("ISO19115")) {
+			response = "<response>Data type ISO19115 not supported</response>";
+		} else {
 			
-			String datasetId = datasetIds.get(0);
 			
+				
 			SolrRecordReader solrRecordReader = new SolrRecordReader(datasetId);
 			
 			Dataset dataset = solrRecordReader.assembleDataset();
 			
 			System.out.println(dataset.getId());
 			
-			FGDCRecordWriter fgdc = new FGDCRecordWriter();
 			
-			fgdc.setFileName("fgdc-" + datasetId + ".xml");
+			if(dataset.getId() != null) {
+				FGDCRecordWriter fgdc = new FGDCRecordWriter();
+				
+				fgdc.setFileName("fgdc-" + datasetId + ".xml");
+				
+				fgdc.setDataset(dataset);
+				
+				fgdc.writeFGDC();
 			
-			fgdc.setDataset(dataset);
-			
-			fgdc.writeFGDC();
-		//}
+				response = (fgdc.getMetadata()).toXML();
 		
-		String response = (fgdc.getMetadata()).toXML();
-	
-		System.out.println("Response: " + response);
+				System.out.println("Response: " + response);
+			
+				response = "<response>See tomcat console</response>\n";
+			} else {
+				response = "<response>" + datasetId + " not found" + "</response>";
+			}
+				
+				
+			
+			
+			
+		}
 		
-		response = "<response>See tomcat console</response>\n";
+		
 		
 		return response;
 	}
