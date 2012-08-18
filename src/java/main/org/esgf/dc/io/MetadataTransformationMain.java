@@ -25,7 +25,6 @@ public class MetadataTransformationMain {
 	
 	private static String DIRECTORY_ROOT = ".";
 	
-	private static boolean writeAll = false;
 	
 	private static int writeType = 0;
 	
@@ -40,30 +39,10 @@ public class MetadataTransformationMain {
 	}
 	
 	protected void run(String [] args) {
-/*
-		if (args.length!=0 && args.length!=4 && args.length!=5) {
-			
-			System.out.println("Usage error: incorrect argument list");
-	    	//System.out.println("          java org.esgf.dc.io."+this.getClass().getName()+" <id>");
-	    	
-			
-	    	System.exit(0);
-	    	
-	    	
-	    } 
-*/
-/*
-		else if(args.length == 0) {
-	    	System.out.println("Default...only write to the properties files");
-	    	
-	    	
-	    } 
-*/		
-//		else {
-	    	
+
 	    	for(int i=0;i<args.length;i++) {
 	    		
-	    		System.out.println("arg " + i + ": " + args[i]);
+	    		//System.out.println("arg " + i + ": " + args[i]);
 	    		
 	    		if(args[i].equals("--cache") && i < args.length-1) {
 	    			i++;
