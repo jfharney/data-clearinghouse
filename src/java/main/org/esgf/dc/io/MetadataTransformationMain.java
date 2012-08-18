@@ -139,7 +139,7 @@ public class MetadataTransformationMain {
 			e.printStackTrace();
 		}
 		
-		System.exit(0);
+		//System.exit(0);
 		
 		//writeOneModel(smr, modelGiven, rootDir);
 		
@@ -248,11 +248,11 @@ System.out.println("\tWriting " + modelId  + " to file");
 	
 	private void writeOneModel(SolrModelReader smr,String modelGiven,String rootDir) {
 
-		System.out.println("Write one model " + modelGiven);
+		System.out.println("Writing model " + modelGiven);
 		
 		for(Object key: smr.getModelMap().keySet()) {
 			String keyStr = (String) key;
-			System.out.println("Key: " + keyStr);
+			//System.out.println("Key: " + keyStr);
 			if(keyStr.equals(modelGiven)) {
 				
 				try{
