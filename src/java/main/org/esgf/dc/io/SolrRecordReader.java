@@ -4,6 +4,7 @@ import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -36,6 +37,11 @@ public class SolrRecordReader {
 	
 	private static String searchAPIURL;// = host + "/esg-search/search?query=*&limit=1&";
 
+	public static void main(String [] args) {
+		SolrRecordReader solr = new SolrRecordReader();
+		
+		
+	}
 	
 	public SolrRecordReader() {
 		this.setDatasetName("");
@@ -47,20 +53,30 @@ public class SolrRecordReader {
 	
 	
 	
+	
 	public Dataset assembleDataset() {
 		String responseBody = null;
 
         // create an http client
         HttpClient client = new HttpClient();
         
+        //this.datasetId.replace("|", "%7C");
+        String tempId = this.datasetId;
+        try {
+			this.datasetId = URLEncoder.encode(tempId,"UTF-8");
+	        //System.out.println(this.datasetId);
+		} catch (UnsupportedEncodingException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+        
+        
+        //assemble the search api url
         searchAPIURL = host + "/esg-search/search?query=*&limit=1&" + "id=" + this.datasetId;
         
-        System.out.println("searchapi url: " + searchAPIURL);
         
-      //attact the dataset id to the query string
+        
         GetMethod method = new GetMethod(searchAPIURL);
-        
-        
         method.getParams().setParameter(HttpMethodParams.RETRY_HANDLER,
                 new DefaultHttpMethodRetryHandler(3, false));
         
@@ -70,11 +86,10 @@ public class SolrRecordReader {
             int statusCode = client.executeMethod(method);
 
             if (statusCode != HttpStatus.SC_OK) {
-                    //LOG.error("Method failed: " + method.getStatusLine());
-
+                    
+            	System.out.println("error in retrieving page");
             }
 
-            // read the response
             responseBody = method.getResponseBodyAsString();
         } catch (HTTPException e) {
             //LOG.error("Fatal protocol violation");
@@ -132,8 +147,6 @@ public class SolrRecordReader {
             	Node docElement = fileElement.getElementsByTagName("doc").item(0);
 
                 NodeList nList = docElement.getChildNodes();
-                
-                System.out.println(nList.getLength());
                 
                 for(int i=0;i<nList.getLength();i++) {
                 	Node nNode = nList.item(i);
@@ -227,16 +240,6 @@ public class SolrRecordReader {
 	}
 	
     
-	public static void main(String [] args) {
-		/*
-		
-		String datasetId = "cmip5.output1.CMCC.CMCC-CM.decadal2005.mon.atmos.Amon.r1i1p1.v20120604%7Cadm07.cmcc.it";
-		SolrRecordReader solrRecordReader = new SolrRecordReader(datasetId);
-		
-		Dataset dataset = solrRecordReader.assembleDataset();
-		
-		System.out.println(dataset.getId());
-		*/
-	}
+	
 	
 }

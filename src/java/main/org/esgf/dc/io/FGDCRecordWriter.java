@@ -118,7 +118,7 @@ public class FGDCRecordWriter {
 	
 	public void writeFGDC() {
 
-		System.out.println("-----Writing fgdc record-----");
+		//System.out.println("-----Writing fgdc record-----");
 		
 		this.writeIdInfo();
 
@@ -128,7 +128,7 @@ public class FGDCRecordWriter {
 		//write to file
 		this.metadata.toFile(this.fileName);
 		
-		System.out.println("-----End Writing fgdc record-----");
+		//System.out.println("-----End Writing fgdc record-----");
 	}
 	
 	private void writeDataual() {
