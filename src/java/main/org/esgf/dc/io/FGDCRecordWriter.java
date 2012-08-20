@@ -52,12 +52,15 @@ public class FGDCRecordWriter {
 		 */
 		
 		List<String> datasetIds = new ArrayList<String>();
+		
+		/*
 		datasetIds.add("cmip5.output1.NCAR.CCSM4.1pctCO2.day.atmos.cfDay.r2i1p1.v20120717%7Ctds.ucar.edu");
 		datasetIds.add("cmip5.output1.INM.inmcm4.1pctCO2.day.atmos.day.r1i1p1.v20110323%7Cpcmdi9.llnl.gov");
 		datasetIds.add("cmip5.output1.CSIRO-BOM.ACCESS1-3.1pctCO2.mon.aerosol.aero.r1i1p1.v20120508%7Cesgnode1.nci.org.au");
 		datasetIds.add("cmip5.output1.NASA-GMAO.GEOS-5.decadal1960.mon.atmos.Amon.r2i1p1.v20120515%7Cesgdata1.nccs.nasa.gov");
 		datasetIds.add("cmip5.output1.NCC.NorESM1-ME.1pctCO2.mon.atmos.Amon.r1i1p1.v20120402%7Cnorstore-trd-bio1.hpc.ntnu.no");
-		
+		*/
+		datasetIds.add("cmip5.output1.CSIRO-BOM.ACCESS1-3.1pctCO2.day.atmos.day.r1i1p1.v1|esgnode2.nci.org.au");
 		
 		for(int i=0;i<datasetIds.size();i++) {
 			
@@ -202,7 +205,7 @@ public class FGDCRecordWriter {
 		digform.setDigtinfo(digtinfo);
 		
 		Digtopt digtopt = new Digtopt();
-		digtopt.getOnlinopt().getComputer().getNetworka().setNetworkr("http://pcmdi9.llnl.gov/esgf-web-fe/live#?model=cam5");
+		digtopt.getOnlinopt().getComputer().getNetworka().setNetworkr("http://esg.ccs.ornl.gov/esgf-web-fe/live?search=true&datacart=true&id=" + this.dataset.getMetadata().get("id"));
 		digform.setDigtopt(digtopt);
 		
 		stdorder.setDigform(digform);
@@ -255,7 +258,7 @@ public class FGDCRecordWriter {
 		//set the origins here
 		List<String> origins = new ArrayList<String>();
 		origins.add("**the name of an organization or individual that developed the data set. this is a multi field");
-		origins.add("pcmdi9.llnl.gov");
+		origins.add("esg.ccs.ornl.gov");
 		citeinfo.setOrigin(origins);
 		
 		//set the pubdate here
@@ -268,8 +271,8 @@ public class FGDCRecordWriter {
 	    
 	    //set the onlinks here
 		List<String> onlink = new ArrayList<String>();
-		onlink.add("http://pcmdi9.llnl.gov/esgf-web-fe/live?id=" + this.dataset.getMetadata().get("id"));
-		onlink.add("pcmdi9.llnl.gov");
+		onlink.add("http://esg.ccs.ornl.gov/esgf-web-fe/live?search=true&datacart=true&id=" + this.dataset.getMetadata().get("id"));
+		onlink.add("esg.ccs.ornl.gov");
 	    citeinfo.setOnlink(onlink);
 	    
 		citation.setCiteInfo(citeinfo);
