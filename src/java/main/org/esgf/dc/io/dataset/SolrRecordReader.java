@@ -1,5 +1,9 @@
-package org.esgf.dc.io;
+package org.esgf.dc.io.dataset;
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -18,8 +22,8 @@ import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.esgf.dc.Dataset;
-import org.esgf.dc.Model;
 import org.esgf.dc.SubModel;
+import org.esgf.dc.io.model.Model;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -37,10 +41,13 @@ public class SolrRecordReader {
 	
 	private static String searchAPIURL;// = host + "/esg-search/search?query=*&limit=1&";
 
+	private static String SAMPLE_FILE = "/Users/8xo";
+	
 	public static void main(String [] args) {
 		SolrRecordReader solr = new SolrRecordReader();
 		
 		
+		Model m = solr.assembleModel();
 	}
 	
 	public SolrRecordReader() {
@@ -52,7 +59,136 @@ public class SolrRecordReader {
 	}
 	
 	
+	public Model assembleModel() {
+		
+		System.out.println("Assembling model");
+		
+		/*
+		// create an http client
+        HttpClient client = new HttpClient();
+        
+      //assemble the search api url
+        searchAPIURL = host + "/esg-search/search?query=*&limit=1&" + "model=" + "CAM5";
+        
+        
+        GetMethod method = new GetMethod(searchAPIURL);
+        method.getParams().setParameter(HttpMethodParams.RETRY_HANDLER,
+                new DefaultHttpMethodRetryHandler(3, false));
+        
+        
+        
+        try {
+            // execute the method
+            int statusCode = client.executeMethod(method);
+
+            if (statusCode != HttpStatus.SC_OK) {
+                    
+            	System.out.println("error in retrieving page");
+            }
+
+            responseBody = method.getResponseBodyAsString();
+        } catch (HTTPException e) {
+            //LOG.error("Fatal protocol violation");
+            e.printStackTrace();
+        } catch (IOException e) {
+            //LOG.error("Fatal transport error");
+            e.printStackTrace();
+        } finally {
+            method.releaseConnection();
+        }
+        */
+        
+
+        String responseBody = "";
+        
+        try {
+        	FileInputStream fstream = new FileInputStream(SAMPLE_FILE + "/search.xml");
+        	
+        	DataInputStream in = new DataInputStream(fstream);
+        	BufferedReader br = new BufferedReader(new InputStreamReader(in));
+        	
+        	String strLine;
+        	
+        	while((strLine = br.readLine()) != null) {
+        		//System.out.println(strLine);
+        		responseBody += strLine + "\n";
+        	}
+        	in.close();
+        	
+        } catch(Exception e) {
+        	System.err.println("Error: " + e.getMessage());
+        }
+        
+        
+        
+        
+        try {
+            DocumentBuilderFactory dbf =
+                DocumentBuilderFactory.newInstance();
+            DocumentBuilder db = dbf.newDocumentBuilder();
+            InputSource is = new InputSource();
+            is.setCharacterStream(new StringReader(responseBody));
+
+            Document doc = db.parse(is);
+            
+            doc.getDocumentElement().normalize();
+            
+            org.w3c.dom.Element fileElement = doc.getDocumentElement();
+            
+            
+            
+            for(int docsize=0;docsize<2;docsize++) {
+            	
+            
+	            Node docElement = fileElement.getElementsByTagName("doc").item(0);
 	
+	            System.out.println(docElement.getNodeName());
+	            
+	            NodeList nList = docElement.getChildNodes();
+	            
+	            for(int i=0;i<nList.getLength();i++) {
+	            	Node nNode = nList.item(i);
+	            	//only interested in "Element" node types
+	            	if(nNode.getNodeType() == Node.ELEMENT_NODE) {
+	            		//System.out.println("nNode: " + nNode.getNodeName());
+	            		if (nNode.getNodeName().equals("str")) {
+	            			//grab the name of the "key" from the attribute of the str tag
+	            			Node attribute = nNode.getAttributes().item(0);
+	            		
+	            			//grab the key (usually only latest or replica)
+	            			int firstIndex = attribute.toString().indexOf("\"");
+	            			String attr = attribute.toString().substring(firstIndex+1,attribute.toString().length()-1);
+	            			
+	            			if(attr.equals("title")) {
+	
+	                			System.out.println("title: " + attr);
+	                			
+	                			
+	                			
+	            			}
+	            			
+	            		}
+	            		
+	            		
+	            	}
+	            }
+	            
+            }
+        }catch(Exception e) {
+        	
+        	e.printStackTrace();
+        
+        
+        }
+        
+        
+        
+        
+        
+        
+        
+		return null;
+	}
 	
 	public Dataset assembleDataset() {
 		String responseBody = null;
@@ -238,6 +374,7 @@ public class SolrRecordReader {
 	public void setDatasetName(String datasetName) {
 		this.datasetId = datasetName;
 	}
+
 	
     
 	

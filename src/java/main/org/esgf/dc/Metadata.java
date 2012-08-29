@@ -12,6 +12,11 @@ import org.esgf.dc.idinfo.XmlFormatter;
 import org.esgf.dc.metainfo.Metainfo;
 import org.esgf.dc.spdoinfo.Spdoinfo;
 import org.esgf.dc.spref.Spref;
+
+import org.esgf.dc.json.JSONException;
+import org.esgf.dc.json.JSONObject;
+import org.esgf.dc.json.XML;
+
 import org.jdom.Element;
 import org.jdom.output.XMLOutputter;
 
@@ -109,6 +114,49 @@ public class Metadata {
 	 }
 	 
 	 
+	
+	
+
+
+
+
+    /** Description of toJSONObject() 
+     * 
+     */
+    public JSONObject toJSONObject() {
+        JSONObject json = null;
+        
+        try {
+            json = XML.toJSONObject(this.toXML());
+        } catch (JSONException e) {
+            System.out.println("Problem in toJSONObject");
+            e.printStackTrace();
+        }
+        
+        return json;
+    }
+
+
+
+
+    /** Description of toJSON() 
+     * 
+     */
+    public String toJSON() {
+        String json = null;
+        
+        try {
+            json = this.toJSONObject().toString(3);
+        } catch (JSONException e) {
+            System.out.println("Problem in toJSON");
+            e.printStackTrace();
+        }
+        
+        return json;
+    }
+
+
+	
 	 /** Description of toXML()
 	 * 
 	 * @return

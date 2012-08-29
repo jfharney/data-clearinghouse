@@ -1,4 +1,4 @@
-package org.esgf.dc.io;
+package org.esgf.dc.io.dataset;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
